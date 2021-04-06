@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
  * Custom code to be run on installing the plugin.
  */
 function xmldb_paygw_alipay_install() {
+    // Enable the alipay payment gateway on installation. It still needs to be configured and enabled for accounts.
+    $order = (!empty($CFG->paygw_plugins_sortorder)) ? explode(',', $CFG->paygw_plugins_sortorder) : [];
+    set_config('paygw_plugins_sortorder', join(',', array_merge($order, ['alipay'])));
 
     return true;
 }

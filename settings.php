@@ -26,8 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-    if ($ADMIN->fulltree) {
-        // TODO: Define the plugin settings page - {@link https://docs.moodle.org/dev/Admin_settings}.
-    }
+    $settings->add(new admin_setting_heading('paygw_alipay_settings', '', get_string('pluginname_desc', 'paygw_alipay')));
+
+    \core_payment\helper::add_common_gateway_settings($settings, 'paygw_alipay');
 }

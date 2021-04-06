@@ -26,3 +26,15 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Alipay ';
+$string['pluginname_desc'] = 'The Alipay plugin allows you to receive payments via Alipay.';
+$string['privacy:metadata'] = 'The Alipay plugin does not store any personal data.';
+$string['clientid'] = 'Client ID';
+$string['clientid_help'] = 'The client ID that Alipay generated for your application.';
+$string['secret'] = 'Secret';
+$string['secret_help'] = 'The Alipay public RSA2 Key that Alipay generated for your application.';
+$string['endpoint'] = 'Gateway endpoint';
+$string['endpoint_help'] = 'The url of the Alipay Gateway';
+$string['moodlepublickey'] = 'Moodle public key';
+$string['alipaypublickey'] = 'Alipay public key';
+$string['gatewaydescription'] = 'Alipay is an authorised payment gateway provider.';
+$string['gatewayname'] = 'Alipay';
