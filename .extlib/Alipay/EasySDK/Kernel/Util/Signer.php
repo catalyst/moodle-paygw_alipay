@@ -17,7 +17,7 @@ class Signer
             "\n-----END RSA PRIVATE KEY-----";
         ($res) or die('您使用的私钥格式错误，请检查RSA私钥配置');
 
-        openssl_sign($content, $sign, $res, OPENSSL_ALGO_SHA256);
+        openssl_sign($content, $sign, $priKey, OPENSSL_ALGO_SHA256);
         $sign = base64_encode($sign);
         return $sign;
     }
