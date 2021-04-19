@@ -31,6 +31,10 @@ namespace paygw_alipay;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class gateway extends \core_payment\gateway {
+    /**
+     * Currencies supported by this plugin.
+     * @return string[]
+     */
     public static function get_supported_currencies(): array {
         // 3-character ISO-4217: https://en.wikipedia.org/wiki/ISO_4217#Active_codes.
         return [
