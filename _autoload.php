@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class loaders for alipay stuff
+ * Class loaders and includes required for alipay.
  *
  * @package    paygw_alipay
  * @copyright  2021 Catalyst IT
@@ -25,12 +25,16 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// Manually include Guzzle libs and autoload other stuff for now.
+require_once(__DIR__ . '/.extlib/GuzzleHttp/functions_include.php');
+require_once(__DIR__ . '/.extlib/GuzzleHttp/Psr7/functions_include.php');
+require_once(__DIR__ . '/.extlib/GuzzleHttp/Promise/functions_include.php');
+
 spl_autoload_register(
     function($classname) {
         $map = [
             'Alipay'      => 'Alipay',
             'AlibabaCloud' => 'AlibabaCloud',
-            'GuzzleHttp' => 'GuzzleHttp',
             'Adbar' => 'Adbar'
         ];
         foreach ($map as $namespace => $subpath) {

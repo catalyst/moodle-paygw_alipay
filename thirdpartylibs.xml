@@ -1,9 +1,30 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
-    <location>.extlib/alipay-easysdk-php</location>
+    <location>.extlib/Alipay</location>
     <name>Alipay EasySDK PHP Library</name>
     <version>2.2.0</version>
+    <license>MIT License</license>
+    <licenseversion>1</licenseversion>
+  </library>
+  <library>
+    <location>.extlib/AlibabaCloud/Tea</location>
+    <name>Alibaba cloud Tea Client for PHP</name>
+    <version>3.1.21</version>
+    <license>Apache</license>
+    <licenseversion>2</licenseversion>
+  </library>
+  <library>
+    <location>.extlib/Adbar</location>
+    <name>Dot - PHP dot notation access to arrays</name>
+    <version>2.2.0</version>
+    <license>MIT License</license>
+    <licenseversion>1</licenseversion>
+  </library>
+  <library>
+    <location>.extlib/GuzzleHttp</location>
+    <name>Guzzle, an extensible PHP HTTP client</name>
+    <version>7.3.0</version>
     <license>MIT License</license>
     <licenseversion>1</licenseversion>
   </library>
