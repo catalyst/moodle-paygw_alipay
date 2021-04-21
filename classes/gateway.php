@@ -52,7 +52,6 @@ class gateway extends \core_payment\gateway {
      */
     public static function add_configuration_to_gateway_form(\core_payment\form\account_gateway $form): void {
         $mform = $form->get_mform();
-        $config = $form->get_gateway_persistent()->get_configuration();
 
         $mform->addElement('text', 'endpoint', get_string('endpoint', 'paygw_alipay'));
         $mform->setType('endpoint', PARAM_URL);
@@ -62,23 +61,21 @@ class gateway extends \core_payment\gateway {
         $mform->setType('clientid', PARAM_TEXT);
         $mform->addHelpButton('clientid', 'clientid', 'paygw_alipay');
 
-        $mform->addElement('hidden', 'moodleprivatekey');
-        $mform->setType('moodleprivatekey', PARAM_TEXT);
+        $mform->addElement('textarea', 'merchantprivatekey', get_string('merchantprivatekey', 'paygw_alipay'));
+        $mform->setType('merchantprivatekey', PARAM_TEXT);
+        $mform->addHelpButton('merchantprivatekey', 'merchantprivatekey', 'paygw_alipay');
 
-        $mform->addElement('hidden', 'moodlepublickey');
-        $mform->setType('moodlepublickey', PARAM_TEXT);
+        $mform->addElement('text', 'alipaycertpath', get_string('alipaycertpath', 'paygw_alipay'));
+        $mform->setType('alipaycertpath', PARAM_TEXT);
+        $mform->addHelpButton('alipaycertpath', 'alipaycertpath', 'paygw_alipay');
 
-        if (empty($config['moodleprivatekey']) && empty($config['moodlepublickey'])) {
-            $key = self::get_key();
-            // Do we need to save this key to the db, so if the user refreshes we don't lose it?
-            $mform->setDefault('moodleprivatekey', $key['private']);
-            $mform->setDefault('moodlepublickey', $key['public']);
-            $config['moodlepublickey'] = $key['public'];
-        }
-        $mform->addElement('static', 'publickeystring', get_string('moodlepublickey', 'paygw_alipay'), $config['moodlepublickey']);
+        $mform->addElement('text', 'alipayrootcertpath', get_string('alipayrootcertpath', 'paygw_alipay'));
+        $mform->setType('alipayrootcertpath', PARAM_TEXT);
+        $mform->addHelpButton('alipayrootcertpath', 'alipayrootcertpath', 'paygw_alipay');
 
-        $mform->addElement('textarea', 'alipay', get_string('alipaypublickey', 'paygw_alipay'));
-        $mform->setType('alipaypublickey', PARAM_TEXT);
+        $mform->addElement('text', 'merchantcertpath', get_string('merchantcertpath', 'paygw_alipay'));
+        $mform->setType('merchantcertpath', PARAM_TEXT);
+        $mform->addHelpButton('merchantcertpath', 'merchantcertpath', 'paygw_alipay');
     }
 
     /**
@@ -92,23 +89,8 @@ class gateway extends \core_payment\gateway {
     public static function validate_gateway_form(\core_payment\form\account_gateway $form,
                                                  \stdClass $data, array $files, array &$errors): void {
         if ($data->enabled &&
-                (empty($data->clientid) || empty($data->moodleprivatekey))) {
+                (empty($data->clientid) || empty($data->merchantprivatekey))) {
             $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
         }
-    }
-
-    /**
-     * Create a new key.
-     */
-    private static function get_key() {
-        $config = array(
-            "private_key_bits" => 2048,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
-        );
-        $res = openssl_pkey_new($config);
-        openssl_pkey_export($res, $privatekey);
-        $pubkey = openssl_pkey_get_details($res);
-
-        return ['private' => $privatekey, 'public' => $pubkey['key']];
     }
 }

@@ -14,44 +14,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This module is responsible for alipay content in the gateways modal.
+ * PayPal repository module to encapsulate all of the AJAX requests that can be sent for Alipay.
  *
- * @module     paygw_alipay/gateway_modal
+ * @module     paygw_alipay/repository
+ * @package    paygw_alipay
  * @copyright  2021 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Templates from 'core/templates';
-import ModalFactory from 'core/modal_factory';
-import * as Repository from './repository';
+import Ajax from 'core/ajax';
 
 /**
- * Creates and shows a modal that contains a placeholder.
- *
- * @returns {Promise<Modal>}
- */
-const showModal = async(alipayscript) => {
-    const modal = await ModalFactory.create({
-        body: await Templates.render('paygw_alipay/alipay_button_placeholder', {"alipayscript": alipayscript})
-    });
-    modal.show();
-    return modal;
-};
-
-
-/**
- * Process the payment.
+ * Return the Alipay form
  *
  * @param {string} component Name of the component that the itemId belongs to
  * @param {string} paymentArea The area of the component that the itemId belongs to
  * @param {number} itemId An internal identifier that is used by the component
- * @param {string} description Description of the payment
- * @returns {Promise<string>}
+ * @param {string} description The description of the payment.
+ * @returns {Promise<{clientid: string, brandname: string, cost: number, currency: string}>}
  */
-export const process = (component, paymentArea, itemId, description) => {
-    showModal('');
-    return Promise.all([Repository.getForm(component, paymentArea, itemId, description)])
-    .then(([alipayConfig]) => {
-        showModal(alipayConfig.alipayform);
-    });
+export const getForm = (component, paymentArea, itemId, description) => {
+    const request = {
+        methodname: 'paygw_alipay_get_form',
+        args: {
+            component,
+            paymentarea: paymentArea,
+            itemid: itemId,
+            description: description
+        },
+    };
+    return Ajax.call([request])[0];
 };
