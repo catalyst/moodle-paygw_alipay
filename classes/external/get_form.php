@@ -37,6 +37,12 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/externallib.php');
 require_once($CFG->dirroot . '/payment/gateway/alipay/_autoload.php');
+
+/**
+ * Class get_form
+ * @copyright 2021 Catalyst IT
+ * @package paygw_alipay\external
+ */
 class get_form extends external_api {
 
     /**
@@ -59,6 +65,7 @@ class get_form extends external_api {
      * @param string $component
      * @param string $paymentarea
      * @param int $itemid
+     * @param string $description
      * @return string[]
      */
     public static function execute(string $component, string $paymentarea, int $itemid, string $description): array {
@@ -92,9 +99,9 @@ class get_form extends external_api {
 
         try {
             $result = Factory::payment()->page()->pay($description, "2234567890", $cost, "/");
-            $responseChecker = new ResponseChecker();
+            $responsechecker = new ResponseChecker();
 
-            if ($responseChecker->success($result)) {
+            if ($responsechecker->success($result)) {
                 $resulttext = $result->body;
             } else {
                 $resulttext = "Call failed, reason:". $result->msg."，".$result->subMsg.PHP_EOL;
