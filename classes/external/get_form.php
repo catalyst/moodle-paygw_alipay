@@ -24,6 +24,7 @@
 
 namespace paygw_alipay\external;
 
+use moodle_url;
 use core_payment\helper;
 use external_api;
 use external_function_parameters;
@@ -80,6 +81,17 @@ class get_form extends external_api {
         $payable = helper::get_payable($component, $paymentarea, $itemid);
         $surcharge = helper::get_gateway_surcharge('alipay');
 
+        $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
+
+        // Check if we have an active ordernumber.
+
+            // Sanity check if this order has been paid - don't make them pay twice.
+
+        // Generate new ordernumber.
+        $order = new \stdClass();
+        $order->id = "13";
+        $processurl = new moodle_url('/payment/gateway/alipay/process.php');
+
         // Moodle sets this to &nbsp; by default easysdk expects '&' see: MDL-71368.
         ini_set('arg_separator.output', '&');
 
@@ -94,11 +106,9 @@ class get_form extends external_api {
         $options->merchantCertPath = $config->merchantcertpath;
 
         Factory::setOptions($options);
-        $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
-        // TODO: Generate Tradenumber.
 
         try {
-            $result = Factory::payment()->page()->pay($description, "2234567890", $cost, "/");
+            $result = Factory::payment()->page()->pay($description, $order->id, $cost, $processurl->out());
             $responsechecker = new ResponseChecker();
 
             if ($responsechecker->success($result)) {
