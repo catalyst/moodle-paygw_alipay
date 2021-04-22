@@ -6,7 +6,7 @@
   <TABLES>
     <TABLE NAME="paygw_alipay" COMMENT="Contains list of alipay initiated orders. - this is basically a copy of the core payments table with an added status field for pre-payment.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNcd ,ULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="The plugin this payment belongs to."/>
         <FIELD NAME="paymentarea" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="The name of payable area"/>
         <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

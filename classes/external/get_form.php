@@ -23,21 +23,16 @@
  */
 
 namespace paygw_alipay\external;
-
-use moodle_url;
+use paygw_alipay\alipay_helper;
 use core_payment\helper;
 use external_api;
 use external_function_parameters;
 use external_value;
 use external_single_structure;
-use Alipay\EasySDK\Kernel\Factory;
-use Alipay\EasySDK\Kernel\Config;
-use Alipay\EasySDK\Kernel\Util\ResponseChecker;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/externallib.php');
-require_once($CFG->dirroot . '/payment/gateway/alipay/_autoload.php');
 
 /**
  * Class get_form
@@ -82,46 +77,22 @@ class get_form extends external_api {
         $surcharge = helper::get_gateway_surcharge('alipay');
 
         $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
+        $order = alipay_helper::get_unprocessed_order($component, $paymentarea, $itemid);
 
-        // Check if we have an active ordernumber.
-
-            // Sanity check if this order has been paid - don't make them pay twice.
-
-        // Generate new ordernumber.
-        $order = new \stdClass();
-        $order->id = "13";
-        $processurl = new moodle_url('/payment/gateway/alipay/process.php');
-
-        // Moodle sets this to &nbsp; by default easysdk expects '&' see: MDL-71368.
-        ini_set('arg_separator.output', '&');
-
-        $options = new \Alipay\EasySDK\Kernel\Config();
-        $options->protocol = 'https';
-        $options->signType = 'RSA2';
-        $options->appId = $config->clientid;
-        $options->gatewayHost = $config->endpoint;
-        $options->merchantPrivateKey = $config->merchantprivatekey;
-        $options->alipayCertPath = $config->alipaycertpath;
-        $options->alipayRootCertPath = $config->alipayrootcertpath;
-        $options->merchantCertPath = $config->merchantcertpath;
-
-        Factory::setOptions($options);
-
-        try {
-            $result = Factory::payment()->page()->pay($description, $order->id, $cost, $processurl->out());
-            $responsechecker = new ResponseChecker();
-
-            if ($responsechecker->success($result)) {
-                $resulttext = $result->body;
-            } else {
-                $resulttext = "Call failed, reason:". $result->msg."，".$result->subMsg.PHP_EOL;
-            }
-        } catch (Exception $e) {
-            $resulttext = "Call failed, ". $e->getMessage(). PHP_EOL;;
+        if ($order) {
+            // Sanity check if this order has already been paid - don't make them pay twice.
+            // If payment is complete - this function will redirect/flag the order as paid.
+          //  alipay_helper::check_payment($config, $order);
         }
 
+        if (empty($order)) {
+            // Create a new order.
+            $order = alipay_helper::create_order($component, $paymentarea, $itemid, $payable->get_account_id());
+        }
+        $script = alipay_helper::get_payment_script($config, $order, $description, $cost);
+
         return [
-            'alipayform' => $resulttext
+            'alipayform' => $script
         ];
     }
 
