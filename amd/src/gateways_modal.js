@@ -49,11 +49,12 @@ const showModal = async(alipayscript) => {
  * @returns {Promise<string>}
  */
 export const process = (component, paymentArea, itemId, description) => {
+    /* eslint-disable */
+    // This is a hack to get around linting. Promises are usually required to return
+    // But we are hacking the process js to inject a redirect so need to wait for that to occur.
     showModal('');
     return Promise.all([Repository.getForm(component, paymentArea, itemId, description)])
     .then(([alipayConfig]) => {
         showModal(alipayConfig.alipayform);
-        // This is a hack to get around linting. Promises are usually required to return
-        // But we are hacking the process js to inject a redirect so need to wait for that to occur.
     });
 };
