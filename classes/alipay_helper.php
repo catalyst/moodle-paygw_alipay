@@ -55,7 +55,7 @@ class alipay_helper {
      * @param string $component
      * @param string $paymentarea
      * @param integer $itemid
-     * @returns false|\stdClass
+     * @return false|\stdClass
      */
     public static function get_unprocessed_order($component, $paymentarea, $itemid) {
         global $USER, $DB;
@@ -77,9 +77,10 @@ class alipay_helper {
      * @param string $component
      * @param string $paymentarea
      * @param integer $itemid
-     * @returns \stdClass
+     * @param string $accountid
+     * @return \stdClass
      */
-    public static function create_order($component, $paymentarea, $itemid, $accountid)  {
+    public static function create_order($component, $paymentarea, $itemid, $accountid) {
         global $USER, $DB;
 
         // Create a new order record.
@@ -114,7 +115,7 @@ class alipay_helper {
 
         $processurl = new moodle_url('/payment/gateway/alipay/process.php');
 
-        Factory::setOptions(alipay_helper::options($config));
+        Factory::setOptions(self::options($config));
 
         try {
             $result = Factory::payment()->page()->pay($description, $order->id, $cost, $processurl->out());
@@ -138,13 +139,13 @@ class alipay_helper {
      * @param \Alipay\EasySDK\Kernel\Config $config
      * @param \stdClass $order
      * @throws \Exception
-     * @returns boolean
+     * @return boolean
      */
     public static function check_payment($config, $order) {
         // Moodle sets this to &nbsp; by default easysdk expects '&' see: MDL-71368.
         ini_set('arg_separator.output', '&');
 
-        Factory::setOptions(alipay_helper::options($config));
+        Factory::setOptions(self::options($config));
 
         try {
             $result = Factory::payment()->common()->query($order->id);
@@ -165,7 +166,7 @@ class alipay_helper {
 
     /**
      * Helper function to set normal alipay options.
-     * @param $config
+     * @param \stdClass $config
      * @return \Alipay\EasySDK\Kernel\Config
      */
     public static function options($config) {
@@ -182,6 +183,12 @@ class alipay_helper {
         return $options;
     }
 
+    /**
+     * Process payment and deliver the order.
+     * @param \stdClass $order
+     * @return array
+     * @throws \coding_exception
+     */
     public static function process_payment ($order) {
         global $DB;
         $payable = helper::get_payable($order->component, $order->paymentarea, $order->itemid);
@@ -194,7 +201,7 @@ class alipay_helper {
             // Store Alipay extra information.
             $order->paymentid = $paymentid;
             $order->timemodified = time();
-            $order->status = alipay_helper::ORDER_STATUS_PAID;
+            $order->status = self::ORDER_STATUS_PAID;
 
             $DB->update_record('paygw_alipay', $order);
 

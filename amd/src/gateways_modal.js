@@ -27,7 +27,7 @@ import * as Repository from './repository';
 
 /**
  * Creates and shows a modal that contains a placeholder.
- *
+ * @param {string} alipayscript
  * @returns {Promise<Modal>}
  */
 const showModal = async(alipayscript) => {

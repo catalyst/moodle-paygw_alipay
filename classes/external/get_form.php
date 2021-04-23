@@ -37,7 +37,7 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * Class get_form
  * @copyright 2021 Catalyst IT
- * @package paygw_alipay\external
+ * @package paygw_alipay
  */
 class get_form extends external_api {
 
