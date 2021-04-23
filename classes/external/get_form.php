@@ -80,9 +80,12 @@ class get_form extends external_api {
         $order = alipay_helper::get_unprocessed_order($component, $paymentarea, $itemid);
 
         if ($order) {
-            // Sanity check if this order has already been paid - don't make them pay twice.
-            // If payment is complete - this function will redirect/flag the order as paid.
-          //  alipay_helper::check_payment($config, $order);
+            if (alipay_helper::check_payment($config, $order)) {
+                // This order has already been paid - prevent them from paying again.
+                return [
+                    'alipayform' => \html_writer::div(get_string('paymentalreadyprocessed', 'paygw_alipay'))
+                ];
+            }
         }
 
         if (empty($order)) {

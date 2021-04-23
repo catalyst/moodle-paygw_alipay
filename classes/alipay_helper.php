@@ -23,9 +23,11 @@
  */
 
 namespace paygw_alipay;
+use core_payment\helper;
 use moodle_url;
 use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Kernel\Util\ResponseChecker;
+use paygw_paypal\paypal_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -133,9 +135,10 @@ class alipay_helper {
     /**
      * Check Alipay to see if this order has been paid.
      *
-     * @param $config
-     * @param $order
+     * @param \Alipay\EasySDK\Kernel\Config $config
+     * @param \stdClass $order
      * @throws \Exception
+     * @returns boolean
      */
     public static function check_payment($config, $order) {
         // Moodle sets this to &nbsp; by default easysdk expects '&' see: MDL-71368.
@@ -147,14 +150,17 @@ class alipay_helper {
             $result = Factory::payment()->common()->query($order->id);
             $responsechecker = new ResponseChecker();
             if ($responsechecker->success($result)) {
-                print_object($result->body);
-                // If payment success, flag payment completed.
-
-                die;
+                if (!empty($result->tradeStatus) &&
+                    ($result->tradeStatus === 'TRADE_SUCCESS' || $result->tradeStatus === 'TRADE_FINISHED')) {
+                    return true;
+                } else {
+                    debugging("Call success, but invalid tradeStatus");
+                }
             }
         } catch (Exception $e) {
             debugging("Call failed, " . $e->getMessage());
         }
+        return false;
     }
 
     /**
@@ -174,5 +180,35 @@ class alipay_helper {
         $options->merchantCertPath = $config->merchantcertpath;
 
         return $options;
+    }
+
+    public static function process_payment ($order) {
+        global $DB;
+        $payable = helper::get_payable($order->component, $order->paymentarea, $order->itemid);
+        $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), helper::get_gateway_surcharge('alipay'));
+        $message = '';
+        try {
+            $paymentid = helper::save_payment($payable->get_account_id(), $order->component, $order->paymentarea,
+                $order->itemid, (int) $order->userid, $cost, $payable->get_currency(), 'paypal');
+
+            // Store Alipay extra information.
+            $order->paymentid = $paymentid;
+            $order->timemodified = time();
+            $order->status = alipay_helper::ORDER_STATUS_PAID;
+
+            $DB->update_record('paygw_alipay', $order);
+
+            helper::deliver_order($order->component, $order->paymentarea, $order->itemid, $paymentid, (int) $order->userid);
+            $success = true;
+        } catch (\Exception $e) {
+            debugging('Exception while trying to process payment: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            $message = get_string('internalerror', 'paygw_alipay');
+            $success = false;
+        }
+
+        return [
+            'success' => $success,
+            'message' => $message,
+        ];
     }
 }

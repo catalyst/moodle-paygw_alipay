@@ -34,7 +34,8 @@ spl_autoload_register(
         $map = [
             'Alipay'      => 'Alipay',
             'AlibabaCloud' => 'AlibabaCloud',
-            'Adbar' => 'Adbar'
+            'Adbar' => 'Adbar',
+            'GuzzleHttp' => 'GuzzleHttp'
         ];
         foreach ($map as $namespace => $subpath) {
             $classpath = explode('_', $classname);
