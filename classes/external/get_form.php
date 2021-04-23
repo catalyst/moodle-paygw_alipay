@@ -81,6 +81,7 @@ class get_form extends external_api {
 
         if ($order) {
             if (alipay_helper::check_payment($config, $order)) {
+                alipay_helper::process_payment($order);
                 // This order has already been paid - prevent them from paying again.
                 return [
                     'alipayform' => \html_writer::div(get_string('paymentalreadyprocessed', 'paygw_alipay'))
