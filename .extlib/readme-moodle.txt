@@ -10,4 +10,13 @@ https://github.com/aliyun/tea-php/tree/master/src
 GuzzleHttp lib copied from:
 https://github.com/guzzle/guzzle
 
+BCMAth compatibilty polyfill copied from:
+https://github.com/phpseclib/bcmath_compat
+BCMath is used by alipay sdk.
+
+PHPseclib copied from:
+https://github.com/phpseclib/phpseclib
+Used by BCMath polyfill.
+
+
 

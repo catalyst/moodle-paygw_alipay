@@ -54,3 +54,4 @@ $string['privacy:metadata:paygw_alipay:timecreated'] = 'The time when the order 
 $string['privacy:metadata:paygw_alipay:timemodified'] = 'The time when the order record was last updated.';
 $string['privacy:metadata:paygw_alipay:userid'] = 'The user who made the order.';
 $string['privacy:metadata:paygw_alipay:status'] = 'The status of the order.';
+$string['bcmathrecommended'] = 'Installing the optional BCMATH PHP Extension is recommended in order to improve site performance.';
