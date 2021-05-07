@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/.extlib/GuzzleHttp/functions_include.php');
 require_once(__DIR__ . '/.extlib/GuzzleHttp/Psr7/functions_include.php');
 require_once(__DIR__ . '/.extlib/GuzzleHttp/Promise/functions_include.php');
-// Add BCMATH
+// Add BCMATH.
 require_once(__DIR__ . '/.extlib/bcmath_compat/src/BCMath.php');
 require_once(__DIR__ . '/.extlib/bcmath_compat/lib/bcmath.php');
 
