@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+import Templates from 'core/templates';
+import ModalFactory from 'core/modal_factory';
 /**
  * This module is responsible for alipay content in the gateways modal.
  *
@@ -21,24 +23,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Templates from 'core/templates';
-import ModalFactory from 'core/modal_factory';
-import * as Repository from './repository';
-
 /**
  * Creates and shows a modal that contains a placeholder.
- * @param {string} alipayscript
+ *
  * @returns {Promise<Modal>}
  */
-const showModal = async(alipayscript) => {
+const showModalWithPlaceholder = async() => {
     const modal = await ModalFactory.create({
-        body: await Templates.render('paygw_alipay/alipay_button_placeholder', {"alipayscript": alipayscript})
+        body: await Templates.render('paygw_alipay/alipay_button_placeholder', {})
     });
     modal.show();
     return modal;
 };
-
-
 /**
  * Process the payment.
  *
@@ -49,12 +45,14 @@ const showModal = async(alipayscript) => {
  * @returns {Promise<string>}
  */
 export const process = (component, paymentArea, itemId, description) => {
-    /* eslint-disable */
-    // This is a hack to get around linting. Promises are usually required to return
-    // But we are hacking the process js to inject a redirect so need to wait for that to occur.
-    showModal('');
-    return Promise.all([Repository.getForm(component, paymentArea, itemId, description)])
-    .then(([alipayConfig]) => {
-        showModal(alipayConfig.alipayform);
+    showModalWithPlaceholder().then(message => {
+        location.href = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?'+
+            'component='+component+
+            '&paymentarea='+paymentArea+
+            '&itemid='+itemId+
+            '&description='+description;
+
+        // We should never get this far.
+        return message;
     });
 };
