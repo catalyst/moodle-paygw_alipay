@@ -31,7 +31,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_login();
 require_admin();
 
-$gateway = $DB->get_record('payment_gateways', ['gateway'=>'alipay'], '*', MUST_EXIST);
+$gateway = $DB->get_record('payment_gateways', ['gateway' => 'alipay'], '*', MUST_EXIST);
 $config = @json_decode($gateway->config, true);
 $config = (object)$config;
 
