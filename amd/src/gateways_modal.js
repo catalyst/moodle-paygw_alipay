@@ -42,15 +42,14 @@ const showModalWithPlaceholder = async() => {
  * @param {string} paymentArea The area of the component that the itemId belongs to
  * @param {number} itemId An internal identifier that is used by the component
  * @param {string} description Description of the payment
- * @returns {Promise<string>}
  */
 export const process = (component, paymentArea, itemId, description) => {
     showModalWithPlaceholder().then(message => {
-        location.href = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?'+
-            'component='+component+
-            '&paymentarea='+paymentArea+
-            '&itemid='+itemId+
-            '&description='+description;
+        location.href = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?' +
+            'component=' + component +
+            '&paymentarea=' + paymentArea +
+            '&itemid=' + itemId +
+            '&description=' + description;
 
         // We should never get this far.
         return message;
