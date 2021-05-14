@@ -38,16 +38,23 @@ require_login(null, false);
 
 $order = $DB->get_record('paygw_alipay', ['id' => $orderid], '*', MUST_EXIST);
 
-$homepageurl = new moodle_url('/');
+$successurl = new moodle_url('/');
 
 // Sanity check the userid matches and that we have an open order.
 if ($order->userid <> $USER->id) {
-    redirect($homepageurl, get_string("invaliduser", "paygw_alipay"), "0", 'warning');
+    redirect($successurl, get_string("invaliduser", "paygw_alipay"), "0", 'warning');
 }
+
 if (method_exists('\core_payment\helper', 'get_success_url')) {
+    // This is a 3.11 or higher site, we can get the url from the api.
     $successurl = helper::get_success_url($order->component, $order->paymentarea, $order->itemid);
-} else {
-    $successurl = $CFG->wwwroot;
+} else if ($order->component == 'enrol_fee' && $order->paymentarea == 'fee') {
+    require_once($CFG->dirroot.'/course/lib.php');
+    // Moodle 3.10 site - try to work out the correct course to redirect this person to on payment.
+    $courseid = $DB->get_field('enrol', 'courseid', ['enrol' => 'fee', 'id' => $order->itemid]);
+    if (!empty($courseid)) {
+        $successurl = course_get_url($courseid);
+    }
 }
 
 if ((int) $order->status === alipay_helper::ORDER_STATUS_PAID) {
