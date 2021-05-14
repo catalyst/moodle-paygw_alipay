@@ -44,7 +44,12 @@ $homepageurl = new moodle_url('/');
 if ($order->userid <> $USER->id) {
     redirect($homepageurl, get_string("invaliduser", "paygw_alipay"), "0", 'warning');
 }
-$successurl = helper::get_success_url($order->component, $order->paymentarea, $order->itemid);
+if (method_exists('\core_payment\helper','get_success_url')) {
+    $successurl = helper::get_success_url($order->component, $order->paymentarea, $order->itemid);
+} else {
+    $successurl = $CFG->wwwroot;
+}
+
 if ((int) $order->status === alipay_helper::ORDER_STATUS_PAID) {
     redirect($successurl, get_string("orderalreadycomplete", "paygw_alipay"));
 }
