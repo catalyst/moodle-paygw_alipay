@@ -15,6 +15,8 @@
 
 import Templates from 'core/templates';
 import ModalFactory from 'core/modal_factory';
+import * as Repository from './repository';
+
 /**
  * This module is responsible for alipay content in the gateways modal.
  *
@@ -35,6 +37,7 @@ const showModalWithPlaceholder = async() => {
     modal.show();
     return modal;
 };
+
 /**
  * Process the payment.
  *
@@ -42,16 +45,19 @@ const showModalWithPlaceholder = async() => {
  * @param {string} paymentArea The area of the component that the itemId belongs to
  * @param {number} itemId An internal identifier that is used by the component
  * @param {string} description Description of the payment
+ * @returns {Promise<string>}
  */
 export const process = (component, paymentArea, itemId, description) => {
-    showModalWithPlaceholder().then(message => {
-        location.href = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?' +
-            'component=' + component +
-            '&paymentarea=' + paymentArea +
-            '&itemid=' + itemId +
-            '&description=' + description;
-
-        // We should never get this far.
-        return message;
-    });
+    return showModalWithPlaceholder()
+        .then(modal => {
+            return Repository.create_payment_url(component, paymentArea, itemId, description)
+                .then(url => {
+                    location.href = url;
+                    // Return a promise that is never going to be resolved.
+                    return new Promise(() => null);
+                }).catch(e => {
+                    modal.hide();
+                    return Promise.reject(e.message);
+                });
+        });
 };

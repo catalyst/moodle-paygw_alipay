@@ -22,26 +22,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Ajax from 'core/ajax';
-
 /**
- * Return the Alipay form
+ * Return the payment url.
  *
  * @param {string} component Name of the component that the itemId belongs to
  * @param {string} paymentArea The area of the component that the itemId belongs to
  * @param {number} itemId An internal identifier that is used by the component
  * @param {string} description The description of the payment.
- * @returns {Promise<{clientid: string, brandname: string, cost: number, currency: string}>}
+ * @returns {string} payment url.
  */
-export const getForm = (component, paymentArea, itemId, description) => {
-    const request = {
-        methodname: 'paygw_alipay_get_form',
-        args: {
-            component,
-            paymentarea: paymentArea,
-            itemid: itemId,
-            description: description
-        },
-    };
-    return Ajax.call([request])[0];
+export const create_payment_url = async(component, paymentArea, itemId, description) => {
+    const url = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?' +
+        'component=' + component +
+        '&paymentarea=' + paymentArea +
+        '&itemid=' + itemId +
+        '&description=' + description;
+    return url;
 };
