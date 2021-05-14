@@ -218,6 +218,13 @@ class alipay_helper {
             'message' => $message,
         ];
     }
+
+    /**
+     * Generate a unique order id based on timecreated and order->id field.
+     *
+     * @param \stdClass $order - the order record from paygw_alipay table.
+     * @return string
+     */
     protected static function get_orderid($order) {
         return $order->timecreated.'_'.$order->id;
     }
