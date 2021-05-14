@@ -50,13 +50,15 @@ const showModalWithPlaceholder = async() => {
 export const process = (component, paymentArea, itemId, description) => {
     return showModalWithPlaceholder()
         .then(modal => {
-            return Repository.create_payment_url(component, paymentArea, itemId, description)
+            return Repository.createPaymentUrl(component, paymentArea, itemId, description)
                 .then(url => {
                     location.href = url;
                     // Return a promise that is never going to be resolved.
                     return new Promise(() => null);
                 }).catch(e => {
                     modal.hide();
+                    // We want to use promise reject here - as that's what core payment stuff expects disable eslint.
+                    /* eslint-disable */
                     return Promise.reject(e.message);
                 });
         });

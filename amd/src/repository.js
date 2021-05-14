@@ -31,7 +31,7 @@
  * @param {string} description The description of the payment.
  * @returns {string} payment url.
  */
-export const create_payment_url = async(component, paymentArea, itemId, description) => {
+export const createPaymentUrl = async(component, paymentArea, itemId, description) => {
     const url = M.cfg.wwwroot + '/payment/gateway/alipay/pay.php?' +
         'component=' + component +
         '&paymentarea=' + paymentArea +
