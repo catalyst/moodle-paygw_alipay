@@ -44,7 +44,7 @@ $homepageurl = new moodle_url('/');
 if ($order->userid <> $USER->id) {
     redirect($homepageurl, get_string("invaliduser", "paygw_alipay"), "0", 'warning');
 }
-if (method_exists('\core_payment\helper','get_success_url')) {
+if (method_exists('\core_payment\helper', 'get_success_url')) {
     $successurl = helper::get_success_url($order->component, $order->paymentarea, $order->itemid);
 } else {
     $successurl = $CFG->wwwroot;
