@@ -35,6 +35,10 @@ $itemid = required_param('itemid', PARAM_INT);
 $description = required_param('description', PARAM_TEXT);
 
 $response = paygw_alipay\external\get_form::execute($component, $paymentarea, $itemid, $description);
+if (!empty($response['warning'])) {
+    $successurl = new moodle_url('/');
+    redirect ($successurl, $response['warning']);
+}
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('embedded');
 $PAGE->set_url('/');

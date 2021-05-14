@@ -48,7 +48,6 @@ $string['paymentverificationfailed'] = 'We could not verify this order was paid.
 $string['internalerror'] = 'An internal error has occurred.';
 $string['paymentsuccessful'] = 'Your payment has been successfully processed';
 $string['orderalreadycomplete'] = 'This order has already been processed';
-$string['paymentalreadyprocessed'] = 'A payment has already been processed - please refresh your page';
 $string['privacy:metadata:paygw_alipay'] = 'Stores information about alipay payments';
 $string['privacy:metadata:paygw_alipay:timecreated'] = 'The time when the order was initiated.';
 $string['privacy:metadata:paygw_alipay:timemodified'] = 'The time when the order record was last updated.';

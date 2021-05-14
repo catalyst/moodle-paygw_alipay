@@ -84,7 +84,8 @@ class get_form extends external_api {
                 alipay_helper::process_payment($order);
                 // This order has already been paid - prevent them from paying again.
                 return [
-                    'alipayform' => \html_writer::div(get_string('paymentalreadyprocessed', 'paygw_alipay'))
+                    'alipayform' => '',
+                    'warning' => \html_writer::div(get_string('orderalreadycomplete', 'paygw_alipay'))
                 ];
             }
         }
@@ -96,7 +97,8 @@ class get_form extends external_api {
         $script = alipay_helper::get_payment_script($config, $order, $description, $cost);
 
         return [
-            'alipayform' => $script
+            'alipayform' => $script,
+            'warning' => ''
         ];
     }
 
@@ -107,7 +109,8 @@ class get_form extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'alipayform' => new external_value(PARAM_RAW, 'Alipay form for payment or error.'),
+            'alipayform' => new external_value(PARAM_RAW, 'Alipay form for payment'),
+            'warning' => new external_value(PARAM_TEXT, 'Alipay warnings')
         ]);
     }
 }
