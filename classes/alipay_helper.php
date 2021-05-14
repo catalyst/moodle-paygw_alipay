@@ -118,7 +118,7 @@ class alipay_helper {
         Factory::setOptions(self::options($config));
 
         try {
-            $result = Factory::payment()->page()->pay($description, $order->id, $cost, $processurl->out());
+            $result = Factory::payment()->page()->pay($description, self::get_orderid($order), $cost, $processurl->out());
             $responsechecker = new ResponseChecker();
 
             if ($responsechecker->success($result)) {
@@ -148,7 +148,7 @@ class alipay_helper {
         Factory::setOptions(self::options($config));
 
         try {
-            $result = Factory::payment()->common()->query($order->id);
+            $result = Factory::payment()->common()->query(self::get_orderid($order));
             $responsechecker = new ResponseChecker();
             if ($responsechecker->success($result)) {
                 if (!empty($result->tradeStatus) &&
@@ -217,5 +217,8 @@ class alipay_helper {
             'success' => $success,
             'message' => $message,
         ];
+    }
+    protected static function get_orderid($order) {
+        return $order->timecreated.'_'.$order->id;
     }
 }

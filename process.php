@@ -32,11 +32,15 @@ use paygw_alipay\alipay_helper;
 require_once(__DIR__ . '/../../../config.php');
 
 // Get Moodle order id from Alipay response.
-$orderid = required_param('out_trade_no', PARAM_INT);
+$outtrade = required_param('out_trade_no', PARAM_ALPHANUMEXT);
+
+$ot = explode("_", $outtrade);
+$orderid = $ot[1];
+$timecreated = $ot[0];
 
 require_login(null, false);
 
-$order = $DB->get_record('paygw_alipay', ['id' => $orderid], '*', MUST_EXIST);
+$order = $DB->get_record('paygw_alipay', ['id' => $orderid, 'timecreated' => $timecreated], '*', MUST_EXIST);
 
 $successurl = new moodle_url('/');
 
