@@ -23,8 +23,6 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 $string['pluginname'] = 'Alipay ';
 $string['pluginname_desc'] = 'The Alipay plugin allows you to receive payments via Alipay.';
 $string['privacy:metadata'] = 'The Alipay plugin does not store any personal data.';
