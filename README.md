@@ -1,6 +1,8 @@
 # Alipay  #
 
-This plugin allows a site to connect to Alipay China using the PHP EasySDK available here:  
+This plugin was developed thanks to funding from Xi’an Jiaotong-Liverpool University (https://www.xjtlu.edu.cn)
+
+The plugin allows a site to connect to Alipay China using the PHP EasySDK available here:  
 https://github.com/alipay/alipay-easysdk/tree/master/php  
   
 Note: This SDK doesn't appear to support the Alipay Global site at this stage.
