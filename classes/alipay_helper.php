@@ -118,7 +118,7 @@ class alipay_helper {
         Factory::setOptions(self::options($config));
 
         try {
-            $result = Factory::payment()->page()->pay($description, self::get_orderid($order), $cost, $processurl->out());
+            $result = Factory::payment()->page()->pay($description, self::get_orderid($order), (string) $cost, $processurl->out());
             $responsechecker = new ResponseChecker();
 
             if ($responsechecker->success($result)) {
@@ -196,7 +196,7 @@ class alipay_helper {
         $message = '';
         try {
             $paymentid = helper::save_payment($payable->get_account_id(), $order->component, $order->paymentarea,
-                $order->itemid, (int) $order->userid, $cost, $payable->get_currency(), 'paypal');
+                $order->itemid, (int) $order->userid, $cost, $payable->get_currency(), 'alipay');
 
             // Store Alipay extra information.
             $order->paymentid = $paymentid;
